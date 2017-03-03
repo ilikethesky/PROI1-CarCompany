@@ -45,4 +45,5 @@ void Car::getInfo() {
     std::cout << "Is broken: " << (isBroken_ ? "Yes" : "No") << std::endl;
     std::cout << "Needs refueling: " << (needsRefueling_ ? "Yes" : "No") << std::endl;
     std::cout << "Current condition: " << conditionNames_[condition_] << std::endl;
+
 }
