@@ -8,9 +8,7 @@ public:
         CarList *prev;
     }CarList;
 
-    CarCompany() {
-        companyCars = NULL;
-    }
+    CarCompany() {companyCars = NULL;}
 
     void printAllCars();
     void printBrokenCars();
