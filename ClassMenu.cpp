@@ -9,17 +9,40 @@
 #endif
 
 void Menu::printMainMenu() {
-    std::cout << "Enter: \n 1 to show cars\n2 to create new car\n3 to delete a car\n4 to change a car\n5 to send a car on the road\n6 to send a car to service" << std::endl;
-    std::cout << "7 to get a car back from the service\n8 to get a car back from the road\n9 to refuel a car\n0 to exit" << std::endl;
-}
-void Menu::printInfoMenu() {
-    std::cout << "Enter:\n1 to print info about all cars\n2 to find broken cars\n3 to find cars on the road\n4 to find cars in service\n5to find cars that are ready to use" << std::endl;
-    std::cout << "6 to find cars that needs refuelling\n0 to return to main menu" << std::endl;
-}
-void Menu::printChangeMenu() {
-    std::cout << "Enter:\n1 to change number of packages\n2 to change mileage\n0 to return to main menu" << std::endl;
+    std::cout << "Enter:" << std::endl;
+    std::cout << "1 to show cars" << std::endl;
+    std::cout << "2 to create new car" << std::endl;
+    std::cout << "3 to delete a car" << std::endl;
+    std::cout << "4 to change a car" << std::endl;
+    std::cout << "5 to send a car on the road" << std::endl;
+    std::cout << "6 to send a car to service" << std::endl;
+    std::cout << "7 to get a car back from the service" << std::endl;
+    std::cout << "8 to get a car back from the road"<< std::endl;
+    std::cout << "9 to refuel a car" << std::endl;
+    std::cout << "0 to exit" << std::endl;
 }
 
+void Menu::printInfoMenu() {
+    std::cout << "Enter:" << std::endl;
+    std::cout << "1 to print information about all cars" << std::endl;
+    std::cout << "2 to find broken cars" << std::endl;
+    std::cout << "3 to find cars on the road" << std::endl;
+    std::cout << "4 to find cars in service" << std::endl;
+    std::cout << "5 to find cars that are ready to use" << std::endl;
+    std::cout << "6 to find cars that needs refuelling" << std::endl;
+    std::cout << "0 to return to main menu" << std::endl;
+}
+
+void Menu::printChangeMenu() {
+    std::cout << "Enter:" << std::endl;
+    std::cout << "1 to change number of packages" << std::endl;
+    std::cout << "2 to change mileage" << std::endl;
+    std::cout << "3 to change need to refuel a car" << std::endl;
+    std::cout << "4 to get a car from the service" << std::endl;
+    std::cout << "0 to return to main menu" << std::endl;
+}
+
+// gets an usigned int from the user, if error return -1
 int Menu::enterNr() {
     int i = 0;
      char n[30];
@@ -36,6 +59,8 @@ int Menu::enterNr() {
      }
      return finalnumber;
 }
+
+//Waits for user to press ENTER
 void Menu::pressEnter() {
     int c;
     std::cout << "Press enter to continue ";
@@ -43,6 +68,7 @@ void Menu::pressEnter() {
     while(c != '\n') c = getchar();
 }
 
+//return first acceptable char from tab that the user enters
 int Menu::returnChar(char *tab, int maximum) {
     int i;
     int c;
@@ -52,6 +78,7 @@ int Menu::returnChar(char *tab, int maximum) {
     }
 }
 
+//gets informations from the user to create a new car - if an error occurred, the creation is stopped
 void Menu::createNewCar() {
     int mileage, nSend, tankCapacity, nofCondition;
     std::cout << "Enter mileage: "; mileage = enterNr(); std::system(CLEAR);
@@ -65,8 +92,8 @@ void Menu::createNewCar() {
         return;
     }
     Car::Condition condition = (Car::Condition)nofCondition;
-    Car car(nSend, mileage, tankCapacity, condition);
-    current_ + car;
+    Car *wsk = new Car(nSend, mileage, tankCapacity, condition);
+    current_ + wsk;
     std::cout << "Car created succesfully" << std::endl;
     Menu::pressEnter();
     std::system(CLEAR);
@@ -76,12 +103,15 @@ void Menu::SelectMainMenu() {
     int user_char;
     char tab[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
     int lenght = 10;
+    int carNr;
+    CarCompany::CarList *x = NULL;
 
     while(1) {
         std::system(CLEAR);
         Menu::printMainMenu();
         user_char = Menu::returnChar(tab, lenght);
         getchar(); // clean '\n' from the buffer
+        x = NULL;
         std::system(CLEAR);
         switch(user_char) {
             case '1':
@@ -91,23 +121,42 @@ void Menu::SelectMainMenu() {
                 Menu::createNewCar();
                 break;
             case '3':
-                //not implemented
+               if( (x = Menu::getaCarNr()) ) { current_ - x; }
                 break;
             case '4':
-                Menu::SelectChangeMenu();
+                Menu::SelectChangeMenu(Menu::getNrWithComunicat("Please enter car number:"));
                 break;
             case '5':
+                if( x = Menu::getaCarNr()) { current_.sendCaronTheRoad((x->car)); }
                 break;
             case '6':
+               if( x = Menu::getaCarNr())
+                    { if(x->car->getIsBroken() == true) current_.sendCarToTheService((x->car));
+                        else std::cout << "Car is not broken. There is no need to send it to the service" << std::endl;
+                     }
                 break;
             case '7':
+                if( x = Menu::getaCarNr())
+                {
+                    if(x->car->getCondition() != Car::inService) current_.getCarFromTheService((x->car));
+                    else std::cout << "Car is not in the service" << std::endl;
+                }
                 break;
             case '8':
+               if( x = Menu::getaCarNr()) {
+                   if(x->car->getCondition() != Car::onTheRoad) current_.getCarFromTheRoad((x->car));
+                   else std::cout << "Car is not on the road" << std::endl;
+                }
                 break;
             case '9':
+               if( x = Menu::getaCarNr()) {
+                  current_.RefuelaCar((x->car));
+                }
                 break;
             case '0':
-                //czyszczenie pamieci
+                //free allocated memory
+                current_.ClearCarCompany();
+                return;
                 break;
         }
         std::system(CLEAR);
@@ -126,22 +175,22 @@ void Menu::SelectInfoMenu() {
 
     switch(user_char) {
         case '1':
-            CarCompany::printAllCars();
+            current_.printAllCars();
             break;
         case '2':
-            CarCompany::printBrokenCars();
+            current_.printBrokenCars();
             break;
         case '3':
-            CarCompany::printCars(Car::onTheRoad);
+            current_.printCars(Car::onTheRoad);
             break;
         case '4':
-            CarCompany::printCars(Car::inService);
+            current_.printCars(Car::inService);
             break;
         case '5':
-            CarCompany::printCars(Car::readyToUse);
+            current_.printCars(Car::readyToUse);
             break;
         case '6':
-            CarCompany::printCarsToRefuel();
+            current_.printCarsToRefuel();
             break;
         case '0':
             return;
@@ -149,5 +198,73 @@ void Menu::SelectInfoMenu() {
     Menu::pressEnter();
 }
 
-void Menu::SelectChangeMenu() {
+void Menu::SelectChangeMenu(int carNr) {
+    if(carNr < 0) {
+        std::cout << "There was en error in entering a car number" << std::endl;
+        pressEnter();
+        return;
+    }
+    CarCompany::CarList *temp = current_.findCar(carNr);
+    if(!temp) {
+        std::cout << "A car with a nr " << carNr << "doesn't exist" << std::endl;
+        pressEnter();
+        return;
+    }
+    Car changed = *(temp->car);
+
+    std::cout << "A car to change:\n " << std::endl;
+    changed.getInfo();
+    pressEnter();
+
+    int user_char, nr;
+    char tab[] = {'1', '2', '3', '4', '0'};
+    int lenght = 5;
+    std::system(CLEAR);
+    Menu::printChangeMenu();
+    user_char = Menu::returnChar(tab, lenght);
+    getchar(); // clean '\n' from the buffer
+    std::system(CLEAR);
+
+    switch(user_char) {
+        case '1':
+            nr = getNrWithComunicat("Please enter a number of packages:");
+            if(nr < 0) return;
+            current_.changeNSendings(temp->car, nr);
+            break;
+        case '2':
+            nr = getNrWithComunicat("Please enter a mileage number:");
+            if(nr < 0) return;
+            current_.changeMileage(temp->car, nr);
+            break;
+        case '3':
+            current_.RefuelaCar(temp->car);
+            break;
+        case '4':
+            if(changed.getCondition() != Car::inService) return;
+            current_.getCarFromTheService(temp->car);
+            break;
+        case '0':
+            return;
+    }
+    Menu::pressEnter();
+}
+
+int Menu::getNrWithComunicat(const char *s) {
+    std::system(CLEAR);
+    int aNr;
+    std::cout << s;
+    aNr = enterNr();
+    std::system(CLEAR);
+    return aNr;
+}
+
+CarCompany::CarList* Menu::getaCarNr() {
+    int carNr = getNrWithComunicat("Please enter a car's number:");
+    CarCompany::CarList *x = current_.findCar(carNr);
+    if(!x) {
+        std::cout << "There was an error or a car " << carNr << "doesn't exist" << std::endl;
+        pressEnter();
+        x = NULL;
+    }
+    return x;
 }

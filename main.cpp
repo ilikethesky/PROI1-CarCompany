@@ -6,6 +6,6 @@ using namespace std;
 int main() {
     CarCompany company;
     Menu menu(company);
-    menu.createNewCar();
+    menu.SelectMainMenu();
     return 0;
 }

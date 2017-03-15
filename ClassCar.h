@@ -36,10 +36,9 @@ public:
     bool getNeedsRefueling();
     int getNr();
     void getInfo();
-
     int operator==(Car x);
 
-    Car(int nSendings, int mileage, int tankCapacity, Condition condition, bool isBroken, bool needsRefueling) {
+    Car(int nSendings, int mileage, int tankCapacity, Condition condition, bool isBroken = false, bool needsRefueling = false) {
         nSendings_ = nSendings;
         mileage_ = mileage;
         tankCapacity_ = tankCapacity;
@@ -53,16 +52,6 @@ public:
        mileage_ =  nSendings_ = tankCapacity_ = 0;
        isBroken_ = needsRefueling_ = 0;
        condition_ = readyToUse;
-       nr_ = uniqueNumber++;
+       nr_ = uniqueNumber;
     }
-
-    Car(int nSendings, int mileage, int tankCapacity, Condition condition) {
-        nSendings_ = nSendings;
-        mileage_ = mileage;
-        tankCapacity_ = tankCapacity;
-        condition_ = condition;
-        isBroken_ = needsRefueling_ = 0;
-        nr_ = uniqueNumber++;
-    }
-
 };
