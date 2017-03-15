@@ -1,9 +1,11 @@
-#include "ClassFirm.cpp"
+#include "ClassMenu.cpp"
 #include <cstring>
 #include <iostream>
 using namespace std;
 
 int main() {
-    Car huhu;
-    huhu.getInfo();
+    CarCompany company;
+    Menu menu(company);
+    menu.createNewCar();
+    return 0;
 }

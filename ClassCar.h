@@ -1,7 +1,7 @@
 #include <cstring>
 #include <iostream>
 
-int uniqueNumber = 0;
+
 
 class Car {
 public:
@@ -10,7 +10,9 @@ public:
         readyToUse = 1,
         inService = 2
     };
+
 private:
+    static int uniqueNumber;
     unsigned int nr_;
     unsigned int nSendings_;
     unsigned int mileage_;
@@ -18,7 +20,7 @@ private:
     Condition condition_;
     bool isBroken_;
     bool needsRefueling_;
-    const char* conditionNames_[3] = {"onTheRoad", "readyToUse", "inService"};
+    static const char* conditionNames_[3];
 
 public:
     void setnSendings(unsigned int number);
@@ -35,6 +37,7 @@ public:
     int getNr();
     void getInfo();
 
+    int operator==(Car x);
 
     Car(int nSendings, int mileage, int tankCapacity, Condition condition, bool isBroken, bool needsRefueling) {
         nSendings_ = nSendings;
@@ -51,6 +54,15 @@ public:
        isBroken_ = needsRefueling_ = 0;
        condition_ = readyToUse;
        nr_ = uniqueNumber++;
+    }
+
+    Car(int nSendings, int mileage, int tankCapacity, Condition condition) {
+        nSendings_ = nSendings;
+        mileage_ = mileage;
+        tankCapacity_ = tankCapacity;
+        condition_ = condition;
+        isBroken_ = needsRefueling_ = 0;
+        nr_ = uniqueNumber++;
     }
 
 };

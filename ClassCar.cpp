@@ -1,5 +1,7 @@
 
 #include "ClassCar.h"
+int Car::uniqueNumber = 1;
+const char* Car::conditionNames_[3] = {"onTheRoad", "readyToUse", "inService"};
 
 void Car::setnSendings(unsigned int number) {
     nSendings_ = number;
@@ -46,4 +48,9 @@ void Car::getInfo() {
     std::cout << "Needs refueling: " << (needsRefueling_ ? "Yes" : "No") << std::endl;
     std::cout << "Current condition: " << conditionNames_[condition_] << std::endl;
 
+}
+
+int Car::operator==(Car x) {
+    if(nr_ == x.nr_) return 1;
+    return 0;
 }
